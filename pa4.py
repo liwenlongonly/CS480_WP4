@@ -42,31 +42,34 @@ if __name__ == '__main__':
     # Predict labels on the test data
     # This prediction uses the default threshold for assigning classes
     # i.e., in this case, 0.5
-    y_pred = bn.predict(X_test)    
-    
+    y_pred = bn.predict(X_test)
+
     # IMPLEMENT BELOW
     # Change the code but do not change the variable names
     # Your final code should not have any print print statements
     # other than the ones already included at the bottom.
 
-    # Count how many spam and not-spam emails are in the test (y_test)    
+    # Count how many spam and not-spam emails are in the test (y_test)
     s_c = 0 # The number of spam emails in the test. Update this.
     ns_c = 0 # The number of not-spam emails in the test. Update this.
-    
+    for item in y_test:
+        if item.startswith('spam'):
+            s_c += 1
+        elif item.startswith('not-spam'):
+            ns_c += 1
     
     # Confusion matrix
-    cm = confusion_matrix(y_test, y_pred, labels=['spam', 'not-spam'])    
+    cm = confusion_matrix(y_test, y_pred, labels=['spam', 'not-spam'])
+
+    as_ps = cm[0][0] # Actual spam, predicted spam. Update this.
+    as_pns = cm[0][1] # Actual spam, predicted not-spam. Update this.
+    ans_ps = cm[1][0] # Actual not-spam, predicted spam. Update this.
+    ans_pns = cm[1][1] # Actual not-spam, predicted not-spam. Update this.
     
-    
-    as_ps = 0 # Actual spam, predicted spam. Update this.
-    as_pns = 0 # Actual spam, predicted not-spam. Update this.
-    ans_ps = 0 # Actual not-spam, predicted spam. Update this.
-    ans_pns = 0 # # Actual not-spam, predicted not-spam. Update this.
-    
-    accuracy = 0 # Accuracy. Update this.
-    precision = 0 # Precision. The positive class is 'spam.' Update this.
-    recall = 0 # Recall. The positive class is 'spam.' Update this.
-    f1 = 0 # F1. The positive class is 'spam.' Update this.
+    accuracy = (as_ps + ans_pns) / (as_ps + as_pns + ans_ps + ans_pns) # Accuracy. Update this.
+    precision = as_ps / (as_ps + ans_ps) # Precision. The positive class is 'spam.' Update this.
+    recall = as_ps / (as_ps + as_pns) # Recall. The positive class is 'spam.' Update this.
+    f1 = 2*precision*recall / (precision + recall) # F1. The positive class is 'spam.' Update this.
     
     # Scikit-learn has methods for calculating the above metrics.
     # I recommend you to use the confusion marix and your
